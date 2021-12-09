@@ -6,10 +6,13 @@ Alphitter is a platform  for user to share their life with their friends
 Alphitter 是一個模擬Twitter的社交媒體平台，使用者可以於平台中，和自己的朋友分享生活。
 
 
+![login](Alphitter-loginPage.png)
+
+![main](Alphitter-mainPage.png)
 
 
 # 平台入口
-待輸入網址：
+https://beginneraboutlife116.github.io/tweet-front-2021/#/signin
 
 
 ## Feature
@@ -58,13 +61,14 @@ As a admin user, you should be able to
 
 ## Getting Started
 
+    git clone 
+
 Clone API repository https://github.com/paulchnag0801/twitter-api-2020.git
 
 
 Clone Vue repository https://github.com/Beginneraboutlife116/tweet-front-2021.git
    
    
-    git clone 
 
 Install Dependancies
 
