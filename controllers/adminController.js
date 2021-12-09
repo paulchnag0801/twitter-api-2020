@@ -15,6 +15,7 @@ const adminController = {
         const result = {
           id: user.dataValues.id,
           avatar: user.dataValues.avatar,
+          cover: user.dataValues.cover,
           account: user.dataValues.account,
           name: user.dataValues.name,
           tweetCounts: user.dataValues.Tweets.length,
