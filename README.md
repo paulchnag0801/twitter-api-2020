@@ -5,6 +5,13 @@ Alphitter is a platform  for user to share their life with their friends
 # 專案名稱 Alphitter
 Alphitter 是一個模擬Twitter的社交媒體平台，使用者可以於平台中，和自己的朋友分享生活。
 
+
+
+
+# 平台入口
+待輸入網址：
+
+
 ## Feature
 
 you can login to this platform  from  user login and admin login page
@@ -33,7 +40,7 @@ As a user, you should be able to
 - 設定個人介面包含帳號、名稱、上傳個人的大頭照與背景圖示，可以修改自己的自我介紹
 - 對任意一篇推文按下喜歡或是取消喜歡
 - 追蹤一個你有興趣的使用者或是取消追蹤一個使用者
-- 隨意導覽任何一個使用者的個人簡介，包含其使用者的所有推文及被追蹤的總數字和正在追蹤別人的總數字
+- 隨意導覽任何一個使用者的個人簡介，包含其使用者的所有推文及被追蹤的總數和正在追蹤別人的總數
 - 進入首頁使用者可以看見系統推薦的排名前10位的跟隨者名單
 - 進入首頁使用者可以看見所有的推文，其推文的回覆內容和是否被按下喜歡
 - 任意發出一篇推文，其推文可以被該使用者或其他使用者觀看且回覆和按下喜歡或取消喜歡
@@ -55,6 +62,8 @@ Clone API repository https://github.com/paulchnag0801/twitter-api-2020.git
 
 
 Clone Vue repository https://github.com/Beginneraboutlife116/tweet-front-2021.git
+   
+   
     git clone 
 
 Install Dependancies
@@ -115,4 +124,4 @@ Paul Chang
 
 白白
 
-Weikai
+Weikai Lin
