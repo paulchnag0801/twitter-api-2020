@@ -95,7 +95,7 @@ As a admin user, you should be able to
 
 - 6. **Set up table**
 
-    ```npx seqeulize db:migrate```
+    ```npx sequelize db:migrate```
 
 - 7. **Set up seed** 
 
