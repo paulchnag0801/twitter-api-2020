@@ -111,7 +111,7 @@ As a admin user, you should be able to
 
     npm run start
 
-The website should start running on
+**you will be see**
 
     SimpleTwitter app listening on port 3000!    
 
