@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "test": "mocha test --exit --recursive --timeout 5000",
-    "style": "standard --fix" 
+    "style": "standard --fix"
   },
   "author": "",
   "license": "ISC",
@@ -35,7 +35,8 @@
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.5.0",
     "sinon": "^7.2.3",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "socket.io": "^4.4.0"
   },
   "devDependencies": {
     "sequelize-test-helpers": "^1.0.7",
