@@ -13,7 +13,7 @@ const chatController = {
     try {
       const chatLists = await Chat.findAll({
         include: [{ model: User }],
-        order: [['createdAt', 'ASC']]
+        order: [['createdAt', 'DESC']]
       })
       const result = chatLists.map((chat) => ({
         user: {
