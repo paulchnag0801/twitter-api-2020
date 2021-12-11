@@ -12,6 +12,7 @@ const httpServer = createServer(app);
 const port = process.env.PORT || 80;
 const passport = require("./config/passport");
 const userController = require("./controllers/userController");
+const chatController = require("./controllers/chatController");
 
 const io = new Server(httpServer, {
   cors: {
@@ -87,10 +88,8 @@ io.on("connection", (socket) => {
   socket.on("MESSAGE", async function (data) {
     // data = { user: id, message: '', timestamp:}
     console.log(data);
-    // get the user object with the avatar and send back the message
-    // const userDetail = await userController.getUserProfile(data.id);
-    // const result = { user: userDetail, message: data.message };
     //save it to db
+    await chatController.saveChat(data);
     //broadcast back
     io.emit("MESSAGE_UPDATE", { ...data });
   });
