@@ -77,11 +77,19 @@ module.exports = (app) => {
     authenticatedUser,
     userController.getUsersRepliesTweets
   )
-  app.get('/api/users/:id/followings', authenticated,
+  app.get(
+    '/api/users/:id/followings',
+    authenticated,
     authenticatedUser,
-    userController.getUsersFollowings)
+    userController.getUsersFollowings
+  )
 
-  app.get('/api/users/:id/followers', authenticated, authenticatedUser, userController.getUserFollowers)
+  app.get(
+    '/api/users/:id/followers',
+    authenticated,
+    authenticatedUser,
+    userController.getUserFollowers
+  )
 
   // replies
   app.get(
@@ -99,11 +107,7 @@ module.exports = (app) => {
 
   // tweets
 
-  app.get(
-    '/api/tweets',
-    authenticated,
-    tweetController.getTweets
-  )
+  app.get('/api/tweets', authenticated, tweetController.getTweets)
   app.get(
     '/api/tweets/:tweet_id',
     authenticated,
@@ -118,13 +122,38 @@ module.exports = (app) => {
   )
 
   // followship
-  app.get('/api/followships/top', authenticated, authenticatedUser, followController.getTopUser)
-  app.post('/api/followships', authenticated, authenticatedUser, followController.addFollowing)
-  app.delete('/api/followships/:followingId', authenticated, authenticatedUser, followController.deleteFollowing)
+  app.get(
+    '/api/followships/top',
+    authenticated,
+    authenticatedUser,
+    followController.getTopUser
+  )
+  app.post(
+    '/api/followships',
+    authenticated,
+    authenticatedUser,
+    followController.addFollowing
+  )
+  app.delete(
+    '/api/followships/:followingId',
+    authenticated,
+    authenticatedUser,
+    followController.deleteFollowing
+  )
 
   // like
-  app.post('/api/tweets/:id/unlike', authenticated, authenticatedUser, likeController.postUnlike)
-  app.post('/api/tweets/:id/like', authenticated, authenticatedUser, likeController.likeTweet)
+  app.post(
+    '/api/tweets/:id/unlike',
+    authenticated,
+    authenticatedUser,
+    likeController.postUnlike
+  )
+  app.post(
+    '/api/tweets/:id/like',
+    authenticated,
+    authenticatedUser,
+    likeController.likeTweet
+  )
   app.get(
     '/api/users/:id/likes',
     authenticated,
