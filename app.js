@@ -87,7 +87,7 @@ io.on("connection", (socket) => {
   });
   socket.on("MESSAGE", async function (data) {
     // data = { user: id, message: '', timestamp:}
-    console.log(data);
+    console.log("--------", data);
     //save it to db
     await chatController.saveChat(data);
     //broadcast back
