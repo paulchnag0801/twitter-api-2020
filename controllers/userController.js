@@ -420,7 +420,6 @@ const userController = {
         where: { id: userId },
         attributes: ["id", "name", "account", "avatar"],
       });
-      console.log("aaaaaa", user);
       return user;
     } catch (error) {
       console.log(error);

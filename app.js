@@ -33,30 +33,29 @@ httpServer.listen(port, () =>
 
 const loginUsers = [];
 
-io.use(function (socket, next) {
-  console.log(socket.handshake.query);
-  if (socket.handshake.query && socket.handshake.query.token) {
-    console.log("here", socket.handshake.query.token);
-    jwt.verify(
-      socket.handshake.query.token,
-      "SECRET_KEY",
-      function (err, decoded) {
-        if (err) return next(new Error("Authentication error"));
-        socket.decoded = decoded;
-        console.log("verify");
-        next();
-      }
-    );
-  } else {
-    next(new Error("Authentication error"));
-  }
-}).on("connection", (socket) => {
+// io.use(function (socket, next) {
+//   console.log("-------", socket.data);
+//   if (socket.handshake.query && socket.handshake.query.token) {
+//     jwt.verify(socket.handshake.query.token, "paul", function (err, decoded) {
+//       if (err) return next(new Error("Authentication error"));
+//       socket.decoded = decoded;
+//       console.log("verify");
+//       next();
+//     });
+//   } else {
+//     next(new Error("Authentication error"));
+//   }
+// }).
+io.on("connection", (socket) => {
   console.log(">>>>connection to server now", socket.id);
   socket.on("USER_ONLINE", async function (data) {
+    console.log("user online", data);
     //save user id
-    const userExist = loginUsers.find((user) => user.id === data.id);
+    const userExist = loginUsers.find((user) => {
+      return user.id === data.user.id;
+    });
     if (!userExist) {
-      loginUsers.push(data);
+      loginUsers.push(data.user);
     }
     //get user detail
     const userList = await Promise.all(
@@ -66,9 +65,13 @@ io.use(function (socket, next) {
     );
     //broadcast list back
     console.log("send back user list, online", userList);
-    io.emit("ONLINE_LIST_UPDATE", userList);
+    io.emit("ONLINE_LIST_UPDATE", {
+      userList,
+      user: { name: data.user.name, status: "on" },
+    });
   });
   socket.on("USER_OFFLINE", function (data) {
+    console.log("user offline", data);
     //save user id
     const findCurrentUser = loginUsers.findIndex((user) => user.id === data.id);
     if (findCurrentUser !== -1) {
@@ -76,16 +79,20 @@ io.use(function (socket, next) {
     }
     //broadcast list back
     console.log("send back user list, offline", loginUsers);
-    io.emit("ONLINE_LIST_UPDATE", loginUsers);
+    io.emit("ONLINE_LIST_UPDATE", {
+      userList: loginUsers,
+      user: { name: data.name, id: data.id, status: "off" },
+    });
   });
   socket.on("MESSAGE", async function (data) {
-    // data = { user: id, message: ''}
+    // data = { user: id, message: '', timestamp:}
+    console.log(data);
     // get the user object with the avatar and send back the message
-    const userDetail = await userController.getUserProfile(user.id);
-    const result = { user: userDetail, message: data.message };
+    // const userDetail = await userController.getUserProfile(data.id);
+    // const result = { user: userDetail, message: data.message };
     //save it to db
     //broadcast back
-    io.emit("MESSAGE_UPDATE", result);
+    io.emit("MESSAGE_UPDATE", { ...data });
   });
   socket.on("disconnect", (reason) => {
     console.log("user disconnect", reason);
