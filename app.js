@@ -57,10 +57,14 @@ io.on("connection", (socket) => {
     console.log("send back user list, offline", loginUsers);
     io.emit("ONLINE_LIST_UPDATE", loginUsers);
   });
-  socket.on("MESSAGE", function (data) {
-    //broadcast message
-    // { user: id, message: ''}
+  socket.on("MESSAGE", async function (data) {
+    // data = { user: id, message: ''}
     // get the user object with the avatar and send back the message
+    const userDetail = await userController.getUserProfile(user.id);
+    const result = { user: userDetail, message: data.message };
+    //save it to db
+    //broadcast back
+    io.emit("MESSAGE_UPDATE", result);
   });
   socket.on("disconnect", (reason) => {
     console.log("user disconnect", reason);
