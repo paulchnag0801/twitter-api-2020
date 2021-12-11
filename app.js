@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const app = express();
 const httpServer = createServer(app);
@@ -32,11 +33,31 @@ httpServer.listen(port, () =>
 
 const loginUsers = [];
 
-io.on("connection", (socket) => {
+io.use(function (socket, next) {
+  console.log(socket.handshake.query);
+  if (socket.handshake.query && socket.handshake.query.token) {
+    console.log("here", socket.handshake.query.token);
+    jwt.verify(
+      socket.handshake.query.token,
+      "SECRET_KEY",
+      function (err, decoded) {
+        if (err) return next(new Error("Authentication error"));
+        socket.decoded = decoded;
+        console.log("verify");
+        next();
+      }
+    );
+  } else {
+    next(new Error("Authentication error"));
+  }
+}).on("connection", (socket) => {
   console.log(">>>>connection to server now", socket.id);
   socket.on("USER_ONLINE", async function (data) {
     //save user id
-    loginUsers.push(data);
+    const userExist = loginUsers.find((user) => user.id === data.id);
+    if (!userExist) {
+      loginUsers.push(data);
+    }
     //get user detail
     const userList = await Promise.all(
       loginUsers.map((user) => {
