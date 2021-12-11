@@ -8,16 +8,13 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const app = express();
 const httpServer = createServer(app);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const passport = require("./config/passport");
+const userController = require("./controllers/userController");
 
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      "http://localhost:8080",
-      "http://localhost:8081",
-      "http://localhost:3000",
-    ],
+    origin: ["http://localhost:8080", "http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true,
     allowEI03: true,
@@ -33,9 +30,46 @@ httpServer.listen(port, () =>
   console.log(`SimpleTwitter app listening on port ${port}!`)
 );
 
+const loginUsers = [];
+
 io.on("connection", (socket) => {
-  console.log(socket);
-  console.log(">>>>connection to server now");
+  console.log(">>>>connection to server now", socket.id);
+  socket.on("USER_ONLINE", async function (data) {
+    //save user id
+    loginUsers.push(data);
+    //get user detail
+    const userList = await Promise.all(
+      loginUsers.map((user) => {
+        return userController.getUserProfile(user.id);
+      })
+    );
+    //broadcast list back
+    console.log("send back user list, online", userList);
+    io.emit("ONLINE_LIST_UPDATE", userList);
+  });
+  socket.on("USER_OFFLINE", function (data) {
+    //save user id
+    const findCurrentUser = loginUsers.findIndex((user) => user.id === data.id);
+    if (findCurrentUser !== -1) {
+      loginUsers.splice(findCurrentUser, 1);
+    }
+    //broadcast list back
+    console.log("send back user list, offline", loginUsers);
+    io.emit("ONLINE_LIST_UPDATE", loginUsers);
+  });
+  socket.on("MESSAGE", function (data) {
+    //broadcast message
+    // { user: id, message: ''}
+    // get the user object with the avatar and send back the message
+  });
+  socket.on("disconnect", (reason) => {
+    console.log("user disconnect", reason);
+    // ...
+  });
+});
+
+io.on("connect_error", (err) => {
+  console.log("connection error", err);
 });
 
 require("./routes")(app, passport);
