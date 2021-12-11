@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       message: DataTypes.TEXT,
       UserId: DataTypes.INTEGER,
-      room: DataTypes.STRING,
+      RoomId: DataTypes.STRING,
     },
     {}
   );

@@ -21,6 +21,8 @@ const io = new Server(httpServer, {
     credentials: true,
     allowEI03: true,
   },
+  pingInterval: 10000,
+  pingTimeout: 5000,
 });
 
 app.use(cors());

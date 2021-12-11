@@ -4,6 +4,7 @@ const followController = require("../controllers/followController");
 const adminController = require("../controllers/adminController");
 const likeController = require("../controllers/likeController");
 const replyController = require("../controllers/replyController");
+const chatController = require("../controllers/chatController");
 const passport = require("../config/passport");
 const helpers = require("../_helpers");
 const multer = require("multer");
@@ -173,5 +174,13 @@ module.exports = (app) => {
     authenticated,
     authenticatedAdmin,
     adminController.deleteTweet
+  );
+
+  //chat
+  app.get(
+    "/api/chats",
+    authenticated,
+    authenticatedUser,
+    chatController.getHistoryChats
   );
 };
