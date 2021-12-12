@@ -16,7 +16,7 @@ const chatController = require('./controllers/chatController')
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:8080', 'http://localhost:3000', 'https://carolebot.github.io/twitter-hackathon/'],
+    origin: ['http://localhost:8080', 'http://localhost:3000', 'https://carolebot.github.io/twitter-hackathon/', 'https://carolebot.github.io/twitter-hackathon'],
     methods: ['GET', 'POST'],
     credentials: true,
     allowEI03: true
