@@ -52,13 +52,12 @@ io.on('connection', (socket) => {
       })
     )
     // broadcast list back
-    if (!userExist) {
-      io.emit('ONLINE_LIST_UPDATE', {
-        userList,
-        user: { name: data.user.name, status: 'on' }
-      })
-    }
+    io.emit('ONLINE_LIST_UPDATE', {
+      userList,
+      user: { name: data.user.name, status: 'on' }
+    })
   })
+
   socket.on('USER_OFFLINE', function (data) {
     // save user id
     const findCurrentUser = loginUsers.findIndex((user) => user.id === data.id)
