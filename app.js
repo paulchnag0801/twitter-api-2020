@@ -52,11 +52,12 @@ io.on('connection', (socket) => {
       })
     )
     // broadcast list back
-
-    io.emit('ONLINE_LIST_UPDATE', {
-      userList,
-      user: { name: data.user.name, status: 'on' }
-    })
+    if (!userExist) {
+      io.emit('ONLINE_LIST_UPDATE', {
+        userList,
+        user: { name: data.user.name, status: 'on' }
+      })
+    }
   })
   socket.on('USER_OFFLINE', function (data) {
     // save user id
