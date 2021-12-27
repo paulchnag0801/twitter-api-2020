@@ -13,6 +13,7 @@ const port = process.env.PORT || 80
 const passport = require('./config/passport')
 const userController = require('./controllers/userController')
 const chatController = require('./controllers/chatController')
+const roomController = require('./controllers/roomController')
 
 const io = new Server(httpServer, {
   cors: {
@@ -37,6 +38,7 @@ httpServer.listen(port, () =>
 const loginUsers = []
 
 io.on('connection', (socket) => {
+  console.log('connection Id: ', socket.id)
   socket.on('USER_ONLINE', async function (data) {
     // save user id
     const userExist = loginUsers.find((user) => {
@@ -78,6 +80,15 @@ io.on('connection', (socket) => {
   })
   socket.on('disconnect', (reason) => {
     console.log('UserDisconnect', reason)
+  })
+
+  socket.on('START_ROOM', async function (data) {
+    // find if user exist
+    // if yes, bring back the room id
+    // if no,create room entry. get room id
+    const room = await roomController.creatRoom(data)
+    console.log('----', room)
+    socket.join(`room${room.id}`)
   })
 })
 
