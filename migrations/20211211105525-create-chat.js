@@ -1,38 +1,41 @@
-"use strict";
+'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Chats", {
+    return queryInterface.createTable('Chats', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       message: {
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT
       },
-      UserId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
+      SenderId: {
+        type: Sequelize.INTEGER
       },
-      RoomId: {
+      ReceiverId: {
+        type: Sequelize.INTEGER
+      },
+      room: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
+      },
+      isRead: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
+        type: Sequelize.DATE
+      }
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Chats");
-  },
-};
+    return queryInterface.dropTable('Chats')
+  }
+}

@@ -58,6 +58,8 @@ io.on('connection', (socket) => {
       userList,
       user: { name: data.user.name, status: 'on' }
     })
+
+    // subscribe to all room
   })
 
   socket.on('USER_OFFLINE', function (data) {
@@ -82,14 +84,88 @@ io.on('connection', (socket) => {
     console.log('UserDisconnect', reason)
   })
 
-  socket.on('START_ROOM', async function (data) {
-    // find if user exist
-    // if yes, bring back the room id
-    // if no,create room entry. get room id
-    const room = await roomController.creatRoom(data)
-    console.log('----', room)
-    socket.join(`room${room.id}`)
+  // socket.on('SUBSCRIBE_TO_ALL_ROOM', function(data){
+  //   //subscribe user to all room which they are sender/receiver
+  //   //return a room list that user subscribe
+  // })
+
+  // socket.on('GET_ROOM_SNAPSHOT', function(date){
+  //   //UI provide a room list
+  //   //return
+  //   {
+  //     user:{
+  //       avatar,
+  //       account,
+  //       name,
+  //       Id
+  //     },
+  //     message:(latest)
+  //   }
+  // })
+
+  socket.on('SUBSCRIBE_ROOM', async function (data) {
+    data = {
+      SenderId: 1,
+      ReceiverId: 2
+    }
+    let room = await roomController.findRoom(data)
+    if (!room) {
+      room = roomController.creatRoom()
+      // broadcast
+      socket.emit('BROADCAST_TO_SUBSCRIBE', {
+        room,
+        ReceiverId: data.ReceiverId
+      })
+    }
+    socket.join(room)
   })
+
+  // //get this room history, UI provide sender and receiver
+  // socket.on('GET_ROOM_HISTORY', function(data){
+  //   //give backend which room
+  // })
+
+  socket.on('SEND_ROOM_MESSAGE', async function (data) {
+    data = {
+      message: 'test message',
+      SenderId: 1,
+      ReceiverId: 2,
+      room: '132537595'
+    }
+    const saveMessage = { ...data, isRead: false }
+    await roomController.saveMessage;
+    socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage);
+  })
+
+  // //get unread message
+  // socket.on('GET_UNREAD_MESSAGE', function(data){
+
+  // })
+
+  // socket.on('CHANGE_TO_READ', function(data){
+  //   //UI provide a list of message, backend change all to true
+  // })
+
+  // get receiver, sender from front-end. Backend get the history record
+  // // sender: weikai, receiver: paul. find  history record, get room Id
+
+  //  {
+  //    Sender: Paul
+  //    Receiver: Weikai
+  //    Message:
+  //    RoomId:
+  //    isRead:
+  //  }
+
+  // Weikai
+  //  unReadMessage:[
+  //    {
+  //      Sender: Paul
+  //      Receiver: Weikai
+  //      Message:
+  //      RoomId:
+  //    }
+  //  ]
 })
 
 io.on('connect_error', (err) => {

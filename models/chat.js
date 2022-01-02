@@ -1,17 +1,19 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Chat = sequelize.define(
-    "Chat",
+    'Chat',
     {
       message: DataTypes.TEXT,
-      UserId: DataTypes.INTEGER,
-      RoomId: DataTypes.STRING,
+      SenderId: DataTypes.INTEGER,
+      ReceiverId: DataTypes.INTEGER,
+      room: DataTypes.STRING,
+      isRead: DataTypes.BOOLEAN
+
     },
     {}
-  );
+  )
   Chat.associate = function (models) {
     // associations can be defined here
-    Chat.belongsTo(models.User);
-  };
-  return Chat;
+  }
+  return Chat
 };
