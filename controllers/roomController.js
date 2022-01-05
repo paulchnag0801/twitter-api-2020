@@ -14,6 +14,7 @@ const roomController = {
   },
   findRoom: async (data) => {
     const { SenderId, ReceiverId } = data
+    console.log(SenderId, ReceiverId)
     const chat = await Chat.findOne({
       SenderId: {
         [Op.in]: [SenderId, ReceiverId]
@@ -22,7 +23,7 @@ const roomController = {
         [Op.in]: [SenderId, ReceiverId]
       }
     })
-    return chat.room
+    return chat ? chat.room : null
   }
 }
 module.exports = roomController

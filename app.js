@@ -104,6 +104,7 @@ io.on('connection', (socket) => {
   // })
 
   socket.on('SUBSCRIBE_ROOM', async function (data) {
+    console.log('subscribe_room', data)
     data = {
       SenderId: 1,
       ReceiverId: 2
@@ -111,8 +112,9 @@ io.on('connection', (socket) => {
     let room = await roomController.findRoom(data)
     if (!room) {
       room = roomController.creatRoom()
+      console.log('>>>>>>', room)
       // broadcast
-      socket.emit('BROADCAST_TO_SUBSCRIBE', {
+      io.emit('BROADCAST_TO_SUBSCRIBE', {
         room,
         ReceiverId: data.ReceiverId
       })
@@ -133,8 +135,8 @@ io.on('connection', (socket) => {
       room: '132537595'
     }
     const saveMessage = { ...data, isRead: false }
-    await roomController.saveMessage;
-    socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage);
+    await roomController.saveMessage
+    socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage)
   })
 
   // //get unread message
