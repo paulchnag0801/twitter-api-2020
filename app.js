@@ -112,13 +112,13 @@ io.on('connection', (socket) => {
     let room = await roomController.findRoom(data)
     if (!room) {
       room = roomController.creatRoom()
-      console.log('>>>>>>', room)
-      // broadcast
-      io.emit('BROADCAST_TO_SUBSCRIBE', {
-        room,
-        ReceiverId: data.ReceiverId
-      })
     }
+    // broadcast
+    io.emit('BROADCAST_TO_SUBSCRIBE', {
+      room,
+      SenderId: data.SenderId,
+      ReceiverId: data.ReceiverId
+    })
     socket.join(room)
   })
 
