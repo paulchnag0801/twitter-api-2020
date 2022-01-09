@@ -14,14 +14,16 @@ const roomController = {
   },
   findRoom: async (data) => {
     const chat = await Chat.findOne({
-      SenderId: {
-        [Op.in]: data
-      },
-      ReceiverId: {
-        [Op.in]: data
+      where: {
+        SenderId: {
+          [Op.in]: data
+        },
+        ReceiverId: {
+          [Op.in]: data
+        }
       }
     })
-    return chat ? chat.room : null
+    return chat ? chat.toJSON().room : null
   },
   saveChat: async (data) => {
     try {

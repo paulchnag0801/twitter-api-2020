@@ -35,6 +35,8 @@ httpServer.listen(port, () =>
   console.log(`SimpleTwitter app listening on port ${port}!`)
 )
 
+roomController.findRoom([64, 10])
+
 const loginUsers = []
 
 io.on('connection', (socket) => {
