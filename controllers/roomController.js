@@ -13,17 +13,23 @@ const roomController = {
     return roomId
   },
   findRoom: async (data) => {
-    const { SenderId, ReceiverId } = data
-    console.log(SenderId, ReceiverId)
     const chat = await Chat.findOne({
       SenderId: {
-        [Op.in]: [SenderId, ReceiverId]
+        [Op.in]: data
       },
       ReceiverId: {
-        [Op.in]: [SenderId, ReceiverId]
+        [Op.in]: data
       }
     })
     return chat ? chat.room : null
+  },
+  saveChat: async (data) => {
+    try {
+      console.log('>>>', data)
+      await Chat.create(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 module.exports = roomController

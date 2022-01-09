@@ -103,23 +103,21 @@ io.on('connection', (socket) => {
   //   }
   // })
 
-  socket.on('SUBSCRIBE_ROOM', async function (data) {
-    console.log('subscribe_room', data)
-    data = {
-      SenderId: 1,
-      ReceiverId: 2
-    }
+  socket.on('CREATE_ROOM', async function (data) {
+    console.log('---', data)
     let room = await roomController.findRoom(data)
     if (!room) {
       room = roomController.creatRoom()
     }
-    // broadcast
-    io.emit('BROADCAST_TO_SUBSCRIBE', {
+    io.emit('ROOM_CREATED', {
       room,
-      SenderId: data.SenderId,
-      ReceiverId: data.ReceiverId
+      users: data
     })
-    socket.join(room)
+  })
+
+  socket.on('SUBSCRIBE_ROOM', async function (data) {
+    console.log(`${socket.id} join ${data}`)
+    socket.join(data)
   })
 
   // //get this room history, UI provide sender and receiver
@@ -128,15 +126,17 @@ io.on('connection', (socket) => {
   // })
 
   socket.on('SEND_ROOM_MESSAGE', async function (data) {
-    data = {
-      message: 'test message',
-      SenderId: 1,
-      ReceiverId: 2,
-      room: '132537595'
-    }
+    // data = {
+    //   message: 'test message',
+    //   SenderId: 1,
+    //   ReceiverId: 2,
+    //   room: '132537595'
+    // }
     const saveMessage = { ...data, isRead: false }
-    await roomController.saveMessage
-    socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage)
+    console.log('send message', saveMessage)
+    await roomController.saveChat(saveMessage)
+    socket.to(data.room)
+    io.emit('NEW_ROOM_MESSAGE', saveMessage)
   })
 
   // //get unread message
