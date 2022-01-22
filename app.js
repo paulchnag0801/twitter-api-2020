@@ -83,24 +83,37 @@ io.on('connection', (socket) => {
     console.log('UserDisconnect', reason)
   })
 
-  // socket.on('SUBSCRIBE_TO_ALL_ROOM', function(data){
-  //   //subscribe user to all room which they are sender/receiver
-  //   //return a room list that user subscribe
-  // })
+  socket.on('SUBSCRIBE_TO_ALL_ROOM', async function (data) {
+    const roomDetail = await roomController.getAllRooms(data)
+    Object.keys(roomDetail).forEach(room => {
+      socket.join(room)
+    })
+    socket.emit('SUBSCRIBED_ROOM', roomDetail)
+  })
 
-  // socket.on('GET_ROOM_SNAPSHOT', function(date){
-  //   //UI provide a room list
-  //   //return
-  //   {
-  //     user:{
-  //       avatar,
-  //       account,
-  //       name,
-  //       Id
-  //     },
-  //     message:(latest)
-  //   }
-  // })
+  socket.on('GET_ROOM_SNAPSHOT', function (data) {
+    console.log('----', data)
+    // {
+    //   'roomId' : who you talk to
+    // }
+
+
+
+    // {
+    //   User: {
+    //     avatar,
+    //       account,
+    //       name,
+    //       Id
+    //   },
+    //   message: (latest),
+    //   createdAt:
+    //   isRead:
+    //   SenderId:
+    //   ReceiverId:
+    //   room:
+    // }
+  })
 
   socket.on('CREATE_ROOM', async function (data) {
     console.log('---', data)
@@ -125,17 +138,9 @@ io.on('connection', (socket) => {
   // })
 
   socket.on('SEND_ROOM_MESSAGE', async function (data) {
-    // data = {
-    //   message: 'test message',
-    //   SenderId: 1,
-    //   ReceiverId: 2,
-    //   room: '132537595'
-    // }
     const saveMessage = { ...data, isRead: false }
-    console.log('send message', saveMessage)
     await roomController.saveChat(saveMessage)
-    socket.to(data.room)
-    io.emit('NEW_ROOM_MESSAGE', saveMessage)
+    socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage)
   })
 
   // //get unread message

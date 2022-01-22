@@ -1,5 +1,5 @@
 const { Chat } = require('../models')
-const { Op } = require('sequelize')
+const { Op, Sequelize } = require('sequelize')
 
 const roomController = {
   creatRoom: (data) => {
@@ -27,8 +27,30 @@ const roomController = {
   },
   saveChat: async (data) => {
     try {
-      console.log('>>>', data)
       await Chat.create(data)
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  getAllRooms: async (data) => {
+    try {
+      // get all room that sender id or receiver id is data
+      // make it unnique
+      const chats = await Chat.findAll({
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('room')), 'room'], 'SenderId', 'ReceiverId'],
+        where: {
+          [Op.or]: [
+            { SenderId: data },
+            { ReceiverId: data }
+          ]
+        }
+      })
+      const result = {}
+      chats.forEach(chat => {
+        const { room, SenderId, ReceiverId } = chat.dataValues
+        result[room] = [SenderId, ReceiverId]
+      })
+      return result
     } catch (error) {
       console.log(error)
     }
