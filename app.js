@@ -91,28 +91,9 @@ io.on('connection', (socket) => {
     socket.emit('SUBSCRIBED_ROOM', roomDetail)
   })
 
-  socket.on('GET_ROOM_SNAPSHOT', function (data) {
-    console.log('----', data)
-    // {
-    //   'roomId' : who you talk to
-    // }
-
-
-
-    // {
-    //   User: {
-    //     avatar,
-    //       account,
-    //       name,
-    //       Id
-    //   },
-    //   message: (latest),
-    //   createdAt:
-    //   isRead:
-    //   SenderId:
-    //   ReceiverId:
-    //   room:
-    // }
+  socket.on('GET_ROOM_SNAPSHOT', async function (data) {
+    const snapshot = await roomController.getRoomSnapshot(data)
+    socket.emit('ROOM_SNAPSHOT', snapshot)
   })
 
   socket.on('CREATE_ROOM', async function (data) {
