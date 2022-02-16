@@ -91,6 +91,7 @@ io.on('connection', (socket) => {
     socket.emit('SUBSCRIBED_ROOM', roomDetail)
   })
 
+  // change to api
   socket.on('GET_ROOM_SNAPSHOT', async function (data) {
     const snapshot = await roomController.getRoomSnapshot(data)
     socket.emit('ROOM_SNAPSHOT', snapshot)
@@ -113,14 +114,19 @@ io.on('connection', (socket) => {
     socket.join(data)
   })
 
-  // //get this room history, UI provide sender and receiver
-  // socket.on('GET_ROOM_HISTORY', function(data){
-  //   //give backend which room
-  // })
+  // get this room history, UI provide sender and receiver
+  // change to api
+  socket.on('GET_ROOM_HISTORY', async function (data) {
+    const roomId = '12345678'
+    const histories = await roomController.getRoomChatHistory(roomId)
+    io.emit('SEND_ROOM_HISTORY', histories)
+  })
 
   socket.on('SEND_ROOM_MESSAGE', async function (data) {
     const saveMessage = { ...data, isRead: false }
-    await roomController.saveChat(saveMessage)
+    if (saveMessage.room) {
+      await roomController.saveChat(saveMessage)
+    }
     socket.to(data.room).emit('NEW_ROOM_MESSAGE', saveMessage)
   })
 
@@ -129,9 +135,11 @@ io.on('connection', (socket) => {
 
   // })
 
-  // socket.on('CHANGE_TO_READ', function(data){
-  //   //UI provide a list of message, backend change all to true
-  // })
+  // change to api
+  socket.on('CHANGE_TO_READ', async function (data) {
+    await roomController.markIsRead(data)
+    // UI provide a list of message, backend change all to true
+  })
 
   // get receiver, sender from front-end. Backend get the history record
   // // sender: weikai, receiver: paul. find  history record, get room Id

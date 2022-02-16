@@ -8,6 +8,7 @@ const chatController = require('../controllers/chatController')
 const passport = require('../config/passport')
 const helpers = require('../_helpers')
 const multer = require('multer')
+const roomController = require('../controllers/roomController')
 const upload = multer({ dest: 'temp/' })
 
 // use helpers.getUser(req) to replace req.user
@@ -183,4 +184,11 @@ module.exports = (app) => {
     authenticatedUser,
     chatController.getHistoryChats
   )
+
+  // room chat
+  app.get('/api/rooms/:id', authenticated, authenticatedUser, roomController.getRoomChatHistory)
+
+  app.get('/api/rooms/snapshot/:id', authenticated, authenticatedUser, roomController.getRoomSnapshot)
+
+  app.put('/api/rooms/chat', authenticated, authenticatedUser, roomController.markIsRead)
 }
