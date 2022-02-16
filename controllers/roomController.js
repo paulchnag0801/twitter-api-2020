@@ -1,6 +1,5 @@
 const { Chat, User } = require('../models')
 const { Op, Sequelize } = require('sequelize')
-const { database } = require('faker/locale/az')
 
 const roomController = {
   creatRoom: (data) => {
@@ -56,9 +55,10 @@ const roomController = {
       console.log(error)
     }
   },
-  getRoomSnapshot: async (data) => {
+
+  getRoomSnapshot: async (req, res) => {
     try {
-      const searchDetail = Object.entries(data)
+      const searchDetail = Object.entries(req.params.id)
       const snapshotList = await Promise.all(
         searchDetail.map(item => {
           return roomController.getSingleSnapshot(item)
@@ -96,6 +96,23 @@ const roomController = {
       ...chatDetail.toJSON()
     }
     return result
+  },
+
+  getRoomChatHistory: async (req, res) => {
+    const room = req.params.id
+    const histories = await Chat.findAll({
+      raw: true,
+      nest: true,
+      where: room
+    })
+    return res.status(200).json({ status: 'success', message: histories })
+  },
+
+  markIsRead: async (req, res) => {
+    // req.body
+    Promise.all(async (data) => {
+      await Chat.update({ ...data, isRead: 1 }, { where: { id: data.id } })
+    })
   }
 }
 module.exports = roomController
