@@ -58,13 +58,13 @@ const roomController = {
 
   getRoomSnapshot: async (req, res) => {
     try {
-      const searchDetail = Object.entries(req.params.id)
+      const searchDetail = Object.entries(req.body)
       const snapshotList = await Promise.all(
         searchDetail.map(item => {
           return roomController.getSingleSnapshot(item)
         })
       )
-      return snapshotList
+      return res.status(200).json(snapshotList)
     } catch (error) {
       console.log(error)
     }
@@ -103,7 +103,7 @@ const roomController = {
     const histories = await Chat.findAll({
       raw: true,
       nest: true,
-      where: room
+      where: { room }
     })
     return res.status(200).json({ status: 'success', message: histories })
   },

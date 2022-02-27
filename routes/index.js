@@ -178,12 +178,12 @@ module.exports = (app) => {
   )
 
   // chat
-  app.get(
-    '/api/chats',
-    authenticated,
-    authenticatedUser,
-    chatController.getHistoryChats
-  )
+  // app.get(
+  //   '/api/chats',
+  //   authenticated,
+  //   authenticatedUser,
+  //   chatController.getHistoryChats
+  // )
 
   // room chat
   app.get('/api/rooms/:id', authenticated, authenticatedUser, roomController.getRoomChatHistory)
