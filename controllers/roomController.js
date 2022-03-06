@@ -109,10 +109,8 @@ const roomController = {
   },
 
   markIsRead: async (req, res) => {
-    // req.body
-    Promise.all(async (data) => {
-      await Chat.update({ ...data, isRead: 1 }, { where: { id: data.id } })
-    })
+    await Chat.update({ isRead: 1 }, { where: { room: req.params.roomId } })
+    return res.status(200).json({ status: 'success' })
   }
 }
 module.exports = roomController

@@ -188,7 +188,7 @@ module.exports = (app) => {
   // room chat
   app.get('/api/rooms/:id', authenticated, authenticatedUser, roomController.getRoomChatHistory)
 
-  app.get('/api/rooms/snapshot/:id', authenticated, authenticatedUser, roomController.getRoomSnapshot)
+  app.post('/api/rooms/snapshot/:id', authenticated, authenticatedUser, roomController.getRoomSnapshot)
 
-  app.put('/api/rooms/chat', authenticated, authenticatedUser, roomController.markIsRead)
+  app.post('/api/rooms/:roomId', authenticated, authenticatedUser, roomController.markIsRead)
 }
