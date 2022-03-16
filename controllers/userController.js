@@ -321,13 +321,16 @@ const userController = {
   },
   getUsersFollowings: async (req, res) => {
     try {
-      const user = (await User.findByPk(req.params.id, {
-        include: [
-          {
-            model: User, as: 'Followings'
-          }
-        ]
-      })).toJSON()
+      const user = (
+        await User.findByPk(req.params.id, {
+          include: [
+            {
+              model: User,
+              as: 'Followings'
+            }
+          ]
+        })
+      ).toJSON()
 
       const results = user.Followings.map((results) => ({
         followingId: results.id,
@@ -335,14 +338,17 @@ const userController = {
         name: results.name,
         avatar: results.avatar,
         introduction: results.introduction,
-        isFollowing: helpers.getUser(req)
+        isFollowing: helpers
+          .getUser(req)
           .Followings.some((user) => user.id === results.id)
       }))
       results.sort((a, z) => {
         return z.isFollowing - a.isFollowing
       })
       // move myself to the top
-      const findMyself = results.findIndex(data => data.followingId === helpers.getUser(req).id)
+      const findMyself = results.findIndex(
+        (data) => data.followingId === helpers.getUser(req).id
+      )
       if (findMyself !== -1) {
         const myself = results[findMyself]
         results.splice(findMyself, 1)
@@ -360,16 +366,28 @@ const userController = {
 
   getUserFollowers: async (req, res) => {
     try {
-      const followers = (await User.findByPk(req.params.id, { include: [{ model: User, as: 'Followers', attributes: ['id', 'name', 'account', 'introduction', 'avatar'] }] })).toJSON()
+      const followers = (
+        await User.findByPk(req.params.id, {
+          include: [
+            {
+              model: User,
+              as: 'Followers',
+              attributes: ['id', 'name', 'account', 'introduction', 'avatar']
+            }
+          ]
+        })
+      ).toJSON()
 
-      const results = followers.Followers.map(data => {
+      const results = followers.Followers.map((data) => {
         const result = {
           followerId: data.id,
           name: data.name,
           account: data.account,
           introduction: data.introduction,
           avatar: data.avatar,
-          isFollowing: helpers.getUser(req).Followings.some(user => user.id === data.id)
+          isFollowing: helpers
+            .getUser(req)
+            .Followings.some((user) => user.id === data.id)
         }
         return result
       })
@@ -378,7 +396,9 @@ const userController = {
       results.sort((a, z) => z.isFollowing - a.isFollowing)
 
       // move myself to the top
-      const findMyself = results.findIndex(data => data.followerId === helpers.getUser(req).id)
+      const findMyself = results.findIndex(
+        (data) => data.followerId === helpers.getUser(req).id
+      )
       if (findMyself !== -1) {
         const myself = results[findMyself]
         results.splice(findMyself, 1)
@@ -390,6 +410,19 @@ const userController = {
       return res
         .status(500)
         .json({ status: 'error', message: 'service error!' })
+    }
+  },
+  getUserProfile: async (userId) => {
+    try {
+      const user = await User.findOne({
+        raw: true,
+        nest: true,
+        where: { id: userId },
+        attributes: ['id', 'name', 'account', 'avatar']
+      })
+      return user
+    } catch (error) {
+      console.log(error)
     }
   }
 }

@@ -3,7 +3,7 @@
     "username": "root",
     "password": "password",
     "database": "ac_twitter_workspace",
-    "host": "127.0.0.1",
+    "host": "35.234.61.125",
     "dialect": "mysql"
   },
   "test": {
@@ -15,7 +15,7 @@
     "logging": false
   }, 
   "production": {
-    "use_env_variable": "CLEARDB_DATABASE_URL",
+    "use_env_variable": "CLEARDB_OLIVE_URL",
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
